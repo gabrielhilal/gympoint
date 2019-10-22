@@ -1,4 +1,5 @@
 import * as Yup from 'yup';
+import Student from '../models/Student';
 
 export default async (req, res, next) => {
   const schema = Yup.object().shape({
@@ -22,6 +23,14 @@ export default async (req, res, next) => {
     await schema.validate(req.body);
   } catch (err) {
     return res.status(400).json({ error: err.errors });
+  }
+
+  const studentWithEmail = await Student.findOne({
+    where: { email: req.body.email },
+  });
+
+  if (studentWithEmail && studentWithEmail.id !== parseInt(req.params.id, 10)) {
+    return res.status(400).json({ error: 'email already in use' });
   }
 
   return next();
