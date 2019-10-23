@@ -1,6 +1,4 @@
 import Sequelize, { Model } from 'sequelize';
-import { addMonths } from 'date-fns';
-import Plan from './Plan';
 
 class Enrolment extends Model {
   static init(sequelize) {
@@ -14,13 +12,6 @@ class Enrolment extends Model {
         sequelize,
       }
     );
-
-    this.addHook('beforeSave', async enrolment => {
-      const plan = await Plan.findByPk(enrolment.plan_id);
-
-      enrolment.end_date = addMonths(enrolment.start_date, plan.duration);
-      enrolment.price = plan.price * plan.duration;
-    });
 
     return this;
   }
