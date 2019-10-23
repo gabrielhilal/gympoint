@@ -7,9 +7,6 @@ import EnrolmentController from './app/controllers/EnrolmentController';
 
 import authMiddleware from './app/middlewares/auth';
 
-import checkPlanMiddleware from './app/middlewares/checkPlan';
-import validatePlanMiddleware from './app/middlewares/validatePlan';
-
 import checkEnrolmentMiddleware from './app/middlewares/checkEnrolment';
 import validateEnrolmentMiddleware from './app/middlewares/validateEnrolment';
 
@@ -26,14 +23,9 @@ routes.put('/students/:id', StudentController.update);
 routes.delete('/students/:id', StudentController.delete);
 
 routes.get('/plans', PlanController.index);
-routes.post('/plans', validatePlanMiddleware, PlanController.store);
-routes.put(
-  '/plans/:id',
-  checkPlanMiddleware,
-  validatePlanMiddleware,
-  PlanController.update
-);
-routes.delete('/plans/:id', checkPlanMiddleware, PlanController.delete);
+routes.post('/plans', PlanController.store);
+routes.put('/plans/:id', PlanController.update);
+routes.delete('/plans/:id', PlanController.delete);
 
 routes.get('/enrolments', EnrolmentController.index);
 routes.post(
