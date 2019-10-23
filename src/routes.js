@@ -7,9 +7,6 @@ import EnrolmentController from './app/controllers/EnrolmentController';
 
 import authMiddleware from './app/middlewares/auth';
 
-import checkStudentMiddleware from './app/middlewares/checkStudent';
-import validateStudentMiddleware from './app/middlewares/validateStudent';
-
 import checkPlanMiddleware from './app/middlewares/checkPlan';
 import validatePlanMiddleware from './app/middlewares/validatePlan';
 
@@ -24,18 +21,9 @@ routes.use(authMiddleware);
 // all router defined below will use the authMiddleware
 
 routes.get('/students', StudentController.index);
-routes.post('/students', validateStudentMiddleware, StudentController.store);
-routes.put(
-  '/students/:id',
-  checkStudentMiddleware,
-  validateStudentMiddleware,
-  StudentController.update
-);
-routes.delete(
-  '/students/:id',
-  checkStudentMiddleware,
-  StudentController.delete
-);
+routes.post('/students', StudentController.store);
+routes.put('/students/:id', StudentController.update);
+routes.delete('/students/:id', StudentController.delete);
 
 routes.get('/plans', PlanController.index);
 routes.post('/plans', validatePlanMiddleware, PlanController.store);

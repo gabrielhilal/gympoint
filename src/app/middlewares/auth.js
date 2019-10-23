@@ -16,6 +16,6 @@ export default async (req, res, next) => {
     await promisify(jwt.verify)(token, authConfig.secret);
     return next();
   } catch (err) {
-    return res.status(401).json({ error: 'Token invalid' });
+    return res.status(401).json({ error: 'token invalid' });
   }
 };
