@@ -3,6 +3,7 @@ import { Router } from 'express';
 import SessionController from './app/controllers/SessionController';
 import StudentController from './app/controllers/StudentController';
 import PlanController from './app/controllers/PlanController';
+import EnrolmentController from './app/controllers/EnrolmentController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -11,6 +12,9 @@ import validateStudentMiddleware from './app/middlewares/validateStudent';
 
 import checkPlanMiddleware from './app/middlewares/checkPlan';
 import validatePlanMiddleware from './app/middlewares/validatePlan';
+
+import checkEnrolmentMiddleware from './app/middlewares/checkEnrolment';
+import validateEnrolmentMiddleware from './app/middlewares/validateEnrolment';
 
 const routes = new Router();
 
@@ -42,5 +46,23 @@ routes.put(
   PlanController.update
 );
 routes.delete('/plans/:id', checkPlanMiddleware, PlanController.delete);
+
+routes.get('/enrolments', EnrolmentController.index);
+routes.post(
+  '/enrolments',
+  validateEnrolmentMiddleware,
+  EnrolmentController.store
+);
+routes.put(
+  '/enrolments/:id',
+  checkEnrolmentMiddleware,
+  validateEnrolmentMiddleware,
+  EnrolmentController.update
+);
+routes.delete(
+  '/enrolments/:id',
+  checkEnrolmentMiddleware,
+  EnrolmentController.delete
+);
 
 export default routes;
