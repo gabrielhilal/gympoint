@@ -35,8 +35,10 @@ class StudentController {
       return res.status(400).json({ error: err.errors });
     }
 
+    const { name, email, age, weight, height } = req.body;
+
     const studentWithEmail = await Student.findOne({
-      where: { email: req.body.email },
+      where: { email },
     });
 
     // Check if student with given email already exist
@@ -44,7 +46,13 @@ class StudentController {
       return res.status(400).json({ error: 'user already exists' });
     }
 
-    const student = await Student.create(req.body);
+    const student = await Student.create({
+      name,
+      email,
+      age,
+      weight,
+      height,
+    });
 
     return res.json(student);
   }
@@ -81,8 +89,10 @@ class StudentController {
       return res.status(400).json({ error: 'student not found' });
     }
 
+    const { name, email, age, weight, height } = req.body;
+
     const studentWithEmail = await Student.findOne({
-      where: { email: req.body.email },
+      where: { email },
     });
 
     // Check if there is any other student with the given email (unless updating the same user)
@@ -90,7 +100,13 @@ class StudentController {
       return res.status(400).json({ error: 'email already in use' });
     }
 
-    await student.update(req.body);
+    await student.update({
+      name,
+      email,
+      age,
+      weight,
+      height,
+    });
 
     return res.json(student);
   }

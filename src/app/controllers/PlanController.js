@@ -29,7 +29,13 @@ class PlanController {
       return res.status(400).json({ error: err.errors });
     }
 
-    const plan = await Plan.create(req.body);
+    const { title, duration, price } = req.body;
+
+    const plan = await Plan.create({
+      title,
+      duration,
+      price,
+    });
 
     return res.json(plan);
   }
@@ -60,7 +66,13 @@ class PlanController {
       return res.status(400).json({ error: 'plan not found' });
     }
 
-    await plan.update(req.body);
+    const { title, duration, price } = req.body;
+
+    await plan.update({
+      title,
+      duration,
+      price,
+    });
 
     return res.json(plan);
   }

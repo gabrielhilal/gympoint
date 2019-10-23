@@ -39,14 +39,16 @@ class EnrolmentController {
       return res.status(400).json({ error: err.errors });
     }
 
-    const student = await Student.findByPk(req.body.student_id);
+    const { plan_id, student_id, start_date } = req.body;
+
+    const student = await Student.findByPk(student_id);
 
     // Check if there is a studen with the given id
     if (!student) {
       return res.status(400).json({ error: 'student not found' });
     }
 
-    const plan = await Plan.findByPk(req.body.plan_id);
+    const plan = await Plan.findByPk(plan_id);
 
     // Check if there is a plan with the given id
     if (!plan) {
@@ -55,9 +57,9 @@ class EnrolmentController {
 
     const activeEnrolment = await Enrolment.findOne({
       where: {
-        student_id: req.body.student_id,
+        student_id,
         end_date: {
-          [Op.gt]: req.body.start_date,
+          [Op.gt]: start_date,
         },
       },
     });
@@ -67,7 +69,11 @@ class EnrolmentController {
       return res.status(400).json({ error: 'student has an active plan' });
     }
 
-    const enrolment = await Enrolment.create(req.body);
+    const enrolment = await Enrolment.create({
+      plan_id,
+      student_id,
+      start_date,
+    });
 
     return res.json(enrolment);
   }
@@ -86,14 +92,16 @@ class EnrolmentController {
       return res.status(400).json({ error: err.errors });
     }
 
-    const student = await Student.findByPk(req.body.student_id);
+    const { plan_id, student_id, start_date } = req.body;
+
+    const student = await Student.findByPk(student_id);
 
     // Check if there is a studen with the given id
     if (!student) {
       return res.status(400).json({ error: 'student not found' });
     }
 
-    const plan = await Plan.findByPk(req.body.plan_id);
+    const plan = await Plan.findByPk(plan_id);
 
     // Check if there is a plan with the given id
     if (!plan) {
@@ -107,7 +115,25 @@ class EnrolmentController {
       return res.status(400).json({ error: 'enrolment not found' });
     }
 
-    await enrolment.update(req.body);
+    const activeEnrolment = await Enrolment.findOne({
+      where: {
+        student_id,
+        end_date: {
+          [Op.gt]: start_date,
+        },
+      },
+    });
+
+    // Check if there is an active enrolment for the student
+    if (activeEnrolment && activeEnrolment.id !== enrolment.id) {
+      return res.status(400).json({ error: 'student has an active plan' });
+    }
+
+    await enrolment.update({
+      plan_id,
+      student_id,
+      start_date,
+    });
 
     return res.json(enrolment);
   }
