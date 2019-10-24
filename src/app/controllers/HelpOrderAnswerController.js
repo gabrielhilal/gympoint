@@ -1,5 +1,8 @@
 import * as Yup from 'yup';
 import HelpOrder from '../models/HelpOrder';
+import Student from '../models/Student';
+import HelpOrderAnswerMail from '../jobs/HelpOrderAnswerMail';
+import Queue from '../../lib/Queue';
 
 class HelpOrderAnswerController {
   async store(req, res) {
@@ -29,6 +32,10 @@ class HelpOrderAnswerController {
       answer: req.body.answer,
       answer_at: new Date(),
     });
+
+    const student = await Student.findByPk(helpOrder.student_id);
+
+    await Queue.add(HelpOrderAnswerMail.key, { student, helpOrder });
 
     return res.json(helpOrder);
   }

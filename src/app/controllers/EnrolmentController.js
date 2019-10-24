@@ -4,6 +4,8 @@ import { parseISO, startOfDay, endOfDay, addMonths } from 'date-fns';
 import Enrolment from '../models/Enrolment';
 import Student from '../models/Student';
 import Plan from '../models/Plan';
+import WelcomeMail from '../jobs/WelcomeMail';
+import Queue from '../../lib/Queue';
 
 class EnrolmentController {
   async index(req, res) {
@@ -76,6 +78,12 @@ class EnrolmentController {
       start_date: startOfDay(parseISO(start_date)),
       end_date: addMonths(endOfDay(parseISO(start_date)), plan.duration),
       price: plan.total,
+    });
+
+    await Queue.add(WelcomeMail.key, {
+      student,
+      plan,
+      enrolment,
     });
 
     return res.json(enrolment);
