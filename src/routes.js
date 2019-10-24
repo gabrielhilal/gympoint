@@ -6,6 +6,7 @@ import PlanController from './app/controllers/PlanController';
 import EnrolmentController from './app/controllers/EnrolmentController';
 import CheckinController from './app/controllers/CheckinController';
 import HelpOrderController from './app/controllers/HelpOrderController';
+import HelpOrderAnswerController from './app/controllers/HelpOrderAnswerController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -22,6 +23,10 @@ routes.post('/students/:studentId/help-orders', HelpOrderController.store);
 routes.use(authMiddleware);
 // all router defined below will use the authMiddleware
 
+routes.post(
+  '/help-orders/:helpOrderId/answers',
+  HelpOrderAnswerController.store
+);
 routes.get('/students', StudentController.index);
 routes.post('/students', StudentController.store);
 routes.put('/students/:id', StudentController.update);
